@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -54,4 +54,5 @@ if __name__ == '__main__':
 
     app.add_error_handler(error)
     print('Polling...')
+
     app.run_polling(poll_interval=1)

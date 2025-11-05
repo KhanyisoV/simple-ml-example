@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header styles */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #ffd700;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Main content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Form container */
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-container h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .loan-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-info {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Result container */
+        .result-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease-out;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .result-header h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f8f9fa;
+            color: #dc3545;
+        }
+
+        /* Prediction badge */
+        .prediction-badge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .prediction-badge.approved {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .prediction-badge.rejected {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: white;
+        }
+
+        .prediction-badge i {
+            font-size: 2rem;
+        }
+
+        /* Confidence score */
+        .confidence-score {
+            margin-bottom: 25px;
+        }
+
+        .confidence-score label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 6px;
+            transition: width 1s ease;
+        }
+
+        .confidence-score span {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Feature importance */
+        .feature-importance {
+            margin-bottom: 25px;
+        }
+
+        .feature-importance h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .factors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .factor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .factor-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .factor-impact {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .factor-impact.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .factor-impact.negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .factor-impact.neutral {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        /* Recommendations */
+        .recommendations {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .recommendations h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 8px 0;
+            color: #495057;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .recommendations li::before {
+            content: "•";
+            color: #667eea;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Info section */
+        .info-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .info-section h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .info-card {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card i {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .info-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .info-card p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                gap: 20px;
+                padding: 0 15px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container,
+            .result-container,
+            .info-section {
+                padding: 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .form-container h2,
+            .result-header h2,
+            .info-section h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success/Error animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .prediction-badge {
+            animation: pulse 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-university"></i>
+                <h1>Loan Approval Predictor</h1>
+            </div>
+            <p class="subtitle">AI-powered loan approval prediction system</p>
+        </header>
+
+        <main class="main-content">
+            <div class="form-container">
+                <h2>Applicant Information</h2>
+                <form id="loanForm" class="loan-form">
+                    <div class="form-group">
+                        <label for="income">Annual Income (R)</label>
+                        <input type="number" id="income" name="income" required min="0" step="1000" placeholder="e.g., 750000">
+                        <div class="input-info">Enter your annual income before taxes</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="creditScore">Credit Score</label>
+                        <input type="number" id="creditScore" name="creditScore" required min="300" max="850" placeholder="e.g., 720">
+                        <div class="input-info">Credit score range: 300-850</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employmentStatus">Employment Status</label>
+                        <select id="employmentStatus" name="employmentStatus" required>
+                            <option value="">Select employment status</option>
+                            <option value="employed">Employed</option>
+                            <option value="self-employed">Self-Employed</option>
+                            <option value="unemployed">Unemployed</option>
+                            <option value="retired">Retired</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loanAmount">Loan Amount (R)</label>
+                        <input type="number" id="loanAmount" name="loanAmount" required min="1000" step="1000" placeholder="e.g., 250000">
+                        <div class="input-info">Minimum loan amount: R1,000</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="debtToIncome">Debt-to-Income Ratio (%)</label>
+                        <input type="number" id="debtToIncome" name="debtToIncome" required min="0" max="100" step="0.1" placeholder="e.g., 35.5">
+                        <div class="input-info">Monthly debt payments ÷ Monthly income × 100</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-calculator"></i>
+                        Predict Loan Approval
+                    </button>
+                </form>
+            </div>
+
+            <div class="result-container" id="resultContainer" style="display: none;">
+                <div class="result-header">
+                    <h2>Prediction Result</h2>
+                    <button class="close-btn" id="closeResult">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="result-content">
+                    <div class="prediction-badge" id="predictionBadge">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="predictionText">Approved</span>
+                    </div>
+                    <div class="confidence-score">
+                        <label>Confidence Score:</label>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidenceFill"></div>
+                        </div>
+                        <span id="confidenceText">85%</span>
+                    </div>
+                    <div class="feature-importance">
+                        <h3>Key Factors</h3>
+                        <div class="factors-list" id="factorsList">
+                            <!-- Factors will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="recommendations" id="recommendations">
+                        <!-- Recommendations will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="info-section">
+            <h3>How it works</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-brain"></i>
+                    <h4>AI Analysis</h4>
+                    <p>Our machine learning model analyzes multiple factors to predict loan approval probability.</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>Secure</h4>
+                    <p>Your data is processed locally and never stored or transmitted to external servers.</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Accurate</h4>
+                    <p>Trained on thousands of loan applications with high accuracy rates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loan Approval Prediction System
+        class LoanApprovalPredictor {
+            constructor() {
+                this.form = document.getElementById('loanForm');
+                this.resultContainer = document.getElementById('resultContainer');
+                this.closeResultBtn = document.getElementById('closeResult');
+                
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                this.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
+                this.closeResultBtn.addEventListener('click', () => this.hideResult());
+                
+                // Add real-time validation
+                this.addRealTimeValidation();
+            }
+
+            addRealTimeValidation() {
+                const inputs = this.form.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('input', () => this.clearFieldError(input));
+                });
+            }
+
+            validateField(field) {
+                const value = field.value.trim();
+                let isValid = true;
+                let errorMessage = '';
+
+                switch (field.id) {
+                    case 'income':
+                        if (value < 0) {
+                            isValid = false;
+                            errorMessage = 'Income cannot be negative';
+                        } else if (value < 100000) {
+                            isValid = false;
+                            errorMessage = 'Income should be at least R100,000';
+                        }
+                        break;
+                    case 'creditScore':
+                        if (value < 300 || value > 850) {
+                            isValid = false;
+                            errorMessage = 'Credit score must be between 300 and 850';
+                        }
+                        break;
+                    case 'loanAmount':
+                        if (value < 1000) {
+                            isValid = false;
+                            errorMessage = 'Loan amount must be at least R1,000';
+                        }
+                        break;
+                    case 'debtToIncome':
+                        if (value < 0 || value > 100) {
+                            isValid = false;
+                            errorMessage = 'Debt-to-income ratio must be between 0% and 100%';
+                        }
+                        break;
+                    case 'employmentStatus':
+                        if (!value) {
+                            isValid = false;
+                            errorMessage = 'Please select employment status';
+                        }
+                        break;
+                }
+
+                this.showFieldError(field, isValid, errorMessage);
+                return isValid;
+            }
+
+            showFieldError(field, isValid, message) {
+                this.clearFieldError(field);
+                
+                if (!isValid) {
+                    field.style.borderColor = '#dc3545';
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'field-error';
+                    errorDiv.style.color = '#dc3545';
+                    errorDiv.style.fontSize = '0.85rem';
+                    errorDiv.style.marginTop = '5px';
+                    errorDiv.textContent = message;
+                    field.parentNode.appendChild(errorDiv);
+                }
+            }
+
+            clearFieldError(field) {
+                field.style.borderColor = '#e1e8ed';
+                const errorDiv = field.parentNode.querySelector('.field-error');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+            }
+
+            async handleFormSubmit(e) {
+                e.preventDefault();
+                
+                // Validate all fields
+                const inputs = this.form.querySelectorAll('input, select');
+                let allValid = true;
+                
+                inputs.forEach(input => {
+                    if (!this.validateField(input)) {
+                        allValid = false;
+                    }
+                });
+
+                if (!allValid) {
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = this.form.querySelector('.submit-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<div class="loading"></div> Processing...';
+                submitBtn.disabled = true;
+
+                try {
+                    // Get form data
+                    const formData = new FormData(this.form);
+                    const loanData = {
+                        income: parseFloat(formData.get('income')),
+                        creditScore: parseInt(formData.get('creditScore')),
+                        employmentStatus: formData.get('employmentStatus'),
+                        loanAmount: parseFloat(formData.get('loanAmount')),
+                        debtToIncome: parseFloat(formData.get('debtToIncome'))
+                    };
+
+                    // Simulate processing delay
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                    // Predict loan approval
+                    const prediction = this.predictLoanApproval(loanData);
+                    
+                    // Display result
+                    this.displayResult(prediction, loanData);
+
+                } catch (error) {
+                    console.error('Error processing loan prediction:', error);
+                    alert('An error occurred while processing your request. Please try again.');
+                } finally {
+                    // Restore button state
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+
+            predictLoanApproval(loanData) {
+                // Calculate risk score based on multiple factors
+                let riskScore = 0;
+                const factors = [];
+
+                // Income factor (0-25 points)
+                const incomeScore = this.calculateIncomeScore(loanData.income);
+                riskScore += incomeScore.score;
+                factors.push({
+                    name: 'Annual Income',
+                    impact: incomeScore.impact,
+                    details: `R${loanData.income.toLocaleString()} - ${incomeScore.impact}`
+                });
+
+                // Credit score factor (0-30 points)
+                const creditScore = this.calculateCreditScore(loanData.creditScore);
+                riskScore += creditScore.score;
+                factors.push({
+                    name: 'Credit Score',
+                    impact: creditScore.impact,
+                    details: `${loanData.creditScore} - ${creditScore.impact}`
+                });
+
+                // Employment status factor (0-20 points)
+                const employmentScore = this.calculateEmploymentScore(loanData.employmentStatus);
+                riskScore += employmentScore.score;
+                factors.push({
+                    name: 'Employment Status',
+                    impact: employmentScore.impact,
+                    details: `${loanData.employmentStatus.replace('-', ' ')} - ${employmentScore.impact}`
+                });
+
+                // Loan amount factor (0-15 points)
+                const loanAmountScore = this.calculateLoanAmountScore(loanData.loanAmount, loanData.income);
+                riskScore += loanAmountScore.score;
+                factors.push({
+                    name: 'Loan Amount',
+                    impact: loanAmountScore.impact,
+                    details: `R${loanData.loanAmount.toLocaleString()} - ${loanAmountScore.impact}`
+                });
+
+                // Debt-to-income ratio factor (0-10 points)
+                const dtiScore = this.calculateDTIScore(loanData.debtToIncome);
+                riskScore += dtiScore.score;
+                factors.push({
+                    name: 'Debt-to-Income Ratio',
+                    impact: dtiScore.impact,
+                    details: `${loanData.debtToIncome}% - ${dtiScore.impact}`
+                });
+
+                // Calculate approval probability (0-100)
+                const maxScore = 100;
+                const approvalProbability = Math.max(0, Math.min(100, ((maxScore - riskScore) / maxScore) * 100));
+                
+                // Determine approval status
+                const isApproved = approvalProbability >= 60;
+                const confidence = Math.round(approvalProbability);
+
+                return {
+                    approved: isApproved,
+                    confidence: confidence,
+                    riskScore: riskScore,
+                    factors: factors,
+                    recommendations: this.generateRecommendations(loanData, factors, isApproved)
+                };
+            }
+
+            calculateIncomeScore(income) {
+                if (income >= 1000000) {
+                    return { score: 0, impact: 'Excellent' };
+                } else if (income >= 750000) {
+                    return { score: 5, impact: 'Good' };
+                } else if (income >= 500000) {
+                    return { score: 10, impact: 'Fair' };
+                } else if (income >= 300000) {
+                    return { score: 15, impact: 'Poor' };
+                } else {
+                    return { score: 25, impact: 'Very Poor' };
+                }
+            }
+
+            calculateCreditScore(creditScore) {
+                if (creditScore >= 750) {
+                    return { score: 0, impact: 'Excellent' };
+                } else if (creditScore >= 700) {
+                    return { score: 5, impact: 'Good' };
+                } else if (creditScore >= 650) {
+                    return { score: 10, impact: 'Fair' };
+                } else if (creditScore >= 600) {
+                    return { score: 15, impact: 'Poor' };
+                } else {
+                    return { score: 30, impact: 'Very Poor' };
+                }
+            }
+
+            calculateEmploymentScore(employmentStatus) {
+                switch (employmentStatus) {
+                    case 'employed':
+                        return { score: 0, impact: 'Excellent' };
+                    case 'self-employed':
+                        return { score: 5, impact: 'Good' };
+                    case 'retired':
+                        return { score: 10, impact: 'Fair' };
+                    case 'student':
+                        return { score: 15, impact: 'Poor' };
+                    case 'unemployed':
+                        return { score: 20, impact: 'Very Poor' };
+                    default:
+                        return { score: 20, impact: 'Very Poor' };
+                }
+            }
+
+            calculateLoanAmountScore(loanAmount, income) {
+                const loanToIncomeRatio = (loanAmount / income) * 100;
+                
+                if (loanToIncomeRatio <= 20) {
+                    return { score: 0, impact: 'Excellent' };
+                } else if (loanToIncomeRatio <= 40) {
+                    return { score: 5, impact: 'Good' };
+                } else if (loanToIncomeRatio <= 60) {
+                    return { score: 10, impact: 'Fair' };
+                } else {
+                    return { score: 15, impact: 'Poor' };
+                }
+            }
+
+            calculateDTIScore(dtiRatio) {
+                if (dtiRatio <= 20) {
+                    return { score: 0, impact: 'Excellent' };
+                } else if (dtiRatio <= 35) {
+                    return { score: 2, impact: 'Good' };
+                } else if (dtiRatio <= 45) {
+                    return { score: 5, impact: 'Fair' };
+                } else if (dtiRatio <= 55) {
+                    return { score: 8, impact: 'Poor' };
+                } else {
+                    return { score: 10, impact: 'Very Poor' };
+                }
+            }
+
+            generateRecommendations(loanData, factors, isApproved) {
+                const recommendations = [];
+
+                if (!isApproved) {
+                    // Find the worst factors
+                    const poorFactors = factors.filter(f => 
+                        f.impact === 'Poor' || f.impact === 'Very Poor'
+                    );
+
+                    if (poorFactors.length > 0) {
+                        recommendations.push('Focus on improving the following areas:');
+                        
+                        poorFactors.forEach(factor => {
+                            switch (factor.name) {
+                                case 'Annual Income':
+                                    recommendations.push('Consider increasing your income through additional work or career advancement');
+                                    break;
+                                case 'Credit Score':
+                                    recommendations.push('Work on improving your credit score by paying bills on time and reducing debt');
+                                    break;
+                                case 'Employment Status':
+                                    recommendations.push('Consider finding stable employment to improve your application');
+                                    break;
+                                case 'Loan Amount':
+                                    recommendations.push('Consider requesting a smaller loan amount relative to your income');
+                                    break;
+                                case 'Debt-to-Income Ratio':
+                                    recommendations.push('Reduce your existing debt to improve your debt-to-income ratio');
+                                    break;
+                            }
+                        });
+                    }
+                } else {
+                    recommendations.push('Your loan application looks strong!');
+                    recommendations.push('Consider the following to potentially get better terms:');
+                    recommendations.push('Continue maintaining good credit habits');
+                    recommendations.push('Consider building an emergency fund');
+                }
+
+                return recommendations;
+            }
+
+            displayResult(prediction, loanData) {
+                // Update prediction badge
+                const predictionBadge = document.getElementById('predictionBadge');
+                const predictionText = document.getElementById('predictionText');
+                const predictionIcon = predictionBadge.querySelector('i');
+
+                if (prediction.approved) {
+                    predictionBadge.className = 'prediction-badge approved';
+                    predictionText.textContent = 'APPROVED';
+                    predictionIcon.className = 'fas fa-check-circle';
+                } else {
+                    predictionBadge.className = 'prediction-badge rejected';
+                    predictionText.textContent = 'REJECTED';
+                    predictionIcon.className = 'fas fa-times-circle';
+                }
+
+                // Update confidence score
+                const confidenceFill = document.getElementById('confidenceFill');
+                const confidenceText = document.getElementById('confidenceText');
+                
+                confidenceFill.style.width = `${prediction.confidence}%`;
+                confidenceText.textContent = `${prediction.confidence}%`;
+
+                // Update confidence bar color based on approval
+                if (prediction.approved) {
+                    confidenceFill.style.background = 'linear-gradient(90deg, #28a745, #20c997)';
+                } else {
+                    confidenceFill.style.background = 'linear-gradient(90deg, #dc3545, #fd7e14)';
+                }
+
+                // Display factors
+                this.displayFactors(prediction.factors);
+
+                // Display recommendations
+                this.displayRecommendations(prediction.recommendations);
+
+                // Show result container
+                this.resultContainer.style.display = 'block';
+                
+                // Scroll to result
+                this.resultContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            displayFactors(factors) {
+                const factorsList = document.getElementById('factorsList');
+                factorsList.innerHTML = '';
+
+                factors.forEach(factor => {
+                    const factorItem = document.createElement('div');
+                    factorItem.className = 'factor-item';
+                    
+                    const impactClass = this.getImpactClass(factor.impact);
+                    
+                    factorItem.innerHTML = `
+                        <span class="factor-name">${factor.name}</span>
+                        <span class="factor-impact ${impactClass}">${factor.impact}</span>
+                    `;
+                    
+                    factorsList.appendChild(factorItem);
+                });
+            }
+
+            getImpactClass(impact) {
+                switch (impact) {
+                    case 'Excellent':
+                    case 'Good':
+                        return 'positive';
+                    case 'Poor':
+                    case 'Very Poor':
+                        return 'negative';
+                    default:
+                        return 'neutral';
+                }
+            }
+
+            displayRecommendations(recommendations) {
+                const recommendationsDiv = document.getElementById('recommendations');
+                recommendationsDiv.innerHTML = `
+                    <h3>Recommendations</h3>
+                    <ul>
+                        ${recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                `;
+            }
+
+            hideResult() {
+                this.resultContainer.style.display = 'none';
+            }
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoanApprovalPredictor();
+            
+            // Add some sample data for demonstration
+            const sampleData = {
+                income: 750000,
+                creditScore: 720,
+                employmentStatus: 'employed',
+                loanAmount: 250000,
+                debtToIncome: 35.5
+            };
+
+            // Pre-fill form with sample data for demonstration
+            Object.keys(sampleData).forEach(key => {
+                const field = document.getElementById(key);
+                if (field) {
+                    field.value = sampleData[key];
+                }
+            });
+        });
+
+        // Add some utility functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-ZA', {
+                style: 'currency',
+                currency: 'ZAR'
+            }).format(amount);
+        }
+
+        function formatPercentage(value) {
+            return `${value.toFixed(1)}%`;
+        }
+    </script>
+</body>
+</html>

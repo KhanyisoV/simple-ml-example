@@ -36,3 +36,4 @@
 # Note: This project currently runs entirely in the browser
 # and does not require any of these packages.
 # They are listed here for future extensibility.
+

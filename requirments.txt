@@ -1,0 +1,38 @@
+# Loan Approval Predictor - Requirements
+# This is a client-side HTML/CSS/JavaScript application
+# No Python dependencies are required to run the application
+
+# Optional: If you want to run a local development server
+# Uncomment one of the following options:
+
+# Option 1: Using Python's built-in HTTP server (no installation needed)
+# python3 -m http.server 8000
+
+# Option 2: Using a more feature-rich development server
+# http-server==0.13.1
+
+# Optional: If you want to add a Python backend in the future
+# flask==3.0.0
+# flask-cors==4.0.0
+
+# Optional: For testing and development
+# pytest==7.4.3
+# pytest-cov==4.1.0
+# black==23.12.1
+# flake8==6.1.0
+
+# Optional: For web scraping or API integration
+# requests==2.31.0
+# beautifulsoup4==4.12.2
+
+# Optional: For data analysis (if extending features)
+# pandas==2.1.4
+# numpy==1.26.2
+
+# Optional: For machine learning integration
+# scikit-learn==1.3.2
+# joblib==1.3.2
+
+# Note: This project currently runs entirely in the browser
+# and does not require any of these packages.
+# They are listed here for future extensibility.
